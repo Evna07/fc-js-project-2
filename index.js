@@ -1,4 +1,4 @@
-const url = "http://api.nbp.pl/api/exchangerates/rates/a/";
+const url = "https://api.nbp.pl/api/exchangerates/rates/a/";
 const main = document.querySelector(".main");
 const h2 = document.createElement("h2");
 h2.textContent = "Przelicznik walut";
