@@ -9,7 +9,7 @@ form.setAttribute("onSubmit", "return false");
 main.appendChild(form);
 const input = document.createElement("input");
 input.setAttribute("type", "number");
-input.setAttribute("placeholder", "podaj liczbę");
+input.setAttribute("placeholder", "podaj kwotę");
 input.setAttribute("required", true);
 input.classList.add("input-field");
 form.appendChild(input);
