@@ -101,6 +101,7 @@ const validateInput = () => {
   } else if (input.value < 0.01) {
     errorLabel.textContent = "Kwota nie może być mniejsza niż 0.01";
     main.appendChild(errorLabel);
+    input.value = "";
     spanWynik.remove();
     return false;
   }
