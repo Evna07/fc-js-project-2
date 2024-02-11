@@ -1,31 +1,11 @@
 const url = "https://api.nbp.pl/api/exchangerates/rates/a/";
-const main = document.querySelector(".main");
-const h2 = document.createElement("h2");
-h2.textContent = "Przelicznik walut";
-h2.classList.add("header");
-main.appendChild(h2);
-const form = document.createElement("form");
-form.setAttribute("onSubmit", "return false");
-main.appendChild(form);
-const input = document.createElement("input");
-input.setAttribute("type", "number");
-input.setAttribute("placeholder", "podaj kwotę");
-input.setAttribute("required", true);
-input.classList.add("input-field");
-form.appendChild(input);
-const select = document.createElement("select");
-select.setAttribute("type", "select");
-select.classList.add("select-list");
-form.appendChild(select);
-const button = document.createElement("button");
-button.setAttribute("id", "getCurrencies");
-button.classList.add("button-submit");
-button.setAttribute("type", "submit");
-button.textContent = "Przelicz";
-form.appendChild(button);
-const spanWynik = document.createElement("span");
-spanWynik.classList.add("span-result");
-spanWynik.textContent = "";
+const container = document.querySelector(".container");
+const currecyList = document.querySelector(".currency-list");
+const buttonSubmit = document.querySelector("#getCurrencies");
+const amount = document.querySelector(".amount-input");
+const totalResult = document.createElement("span");
+totalResult.classList.add("total-result");
+totalResult.textContent = "";
 const loader = document.createElement("span");
 const errorLabel = document.createElement("label");
 errorLabel.classList.add("error-label");
@@ -33,31 +13,31 @@ errorLabel.classList.add("error-label");
 const currencies = ["EUR", "USD", "CHF"];
 
 currencies.forEach((currency) => {
-  const option = document.createElement("option");
-  option.value = currency;
-  option.textContent = currency;
-  select.appendChild(option);
+  const optionCurrecy = document.createElement("option");
+  optionCurrecy.value = currency;
+  optionCurrecy.textContent = currency;
+  currecyList.appendChild(optionCurrecy);
 });
 
-const addErrorLabel = () => {
-  spanWynik.textContent = "";
-  errorLabel.textContent = "Request Error";
-  main.appendChild(errorLabel);
+const addErrorLabel = (errMsg) => {
+  totalResult.textContent = "";
+  errorLabel.textContent = errMsg;
+  container.appendChild(errorLabel);
   loader.remove();
-  input.value = "";
+  amount.value = "";
 };
 
 const clearLabel = () => {
   errorLabel.remove();
 };
 
-select.addEventListener("change", () => {
-  spanWynik.remove();
+currecyList.addEventListener("change", () => {
+  totalResult.remove();
 });
 
 const displayLoading = () => {
-  main.appendChild(loader);
-  spanWynik.remove();
+  container.appendChild(loader);
+  totalResult.remove();
   loader.classList.add("loader");
 };
 
@@ -71,38 +51,43 @@ const getRate = () => {
     .then((response) => response.json())
     .then((data) => {
       hideLoading();
-      const rateValue = Number(data.rates[0].mid);
-      result(rateValue);
+      const rate = data?.rates?.[0]?.mid;
+      if (rate) {
+        const rateValue = Number(rate);
+        result(rateValue);
+      } else {
+        addErrorLabel("Nie można uzyskać wartości kursu waluty.");
+      }
     })
     .catch((err) => {
-      addErrorLabel(err);
+      addErrorLabel("Request Error");
     });
 };
 
 const result = (rateValue) => {
-  main.appendChild(spanWynik);
-  const inputVal = input.value;
+  container.appendChild(totalResult);
+  const inputVal = amount.value;
   const result = inputVal * rateValue;
-  if (input.value !== "") {
-    spanWynik.textContent = `${Number(inputVal).toFixed(2)} ${
-      select.value
+  if (amount.value !== "") {
+    totalResult.textContent = `${Number(inputVal).toFixed(2)} ${
+      currecyList.value
     } = ${result.toFixed(2)} PLN`;
-  } else spanWynik.remove();
+  } else totalResult.remove();
 
-  input.value = "";
+  amount.value = "";
 };
 
 const validateInput = () => {
-  if (input.value === "") {
+  if (amount.value === "") {
     errorLabel.textContent = "Kwota nie może być pusta";
-    main.appendChild(errorLabel);
-    spanWynik.remove();
+    container.appendChild(errorLabel);
+    totalResult.remove();
     return false;
-  } else if (input.value < 0.01) {
+  } else if (amount.value < 0.01) {
     errorLabel.textContent = "Kwota nie może być mniejsza niż 0.01";
-    main.appendChild(errorLabel);
-    input.value = "";
-    spanWynik.remove();
+    container.appendChild(errorLabel);
+    amount.value = "";
+    totalResult.remove();
     return false;
   }
   errorLabel.remove();
@@ -110,7 +95,7 @@ const validateInput = () => {
   clearLabel();
 };
 
-button.addEventListener("click", () => {
+buttonSubmit.addEventListener("click", () => {
   errorLabel.remove();
   validateInput();
 });

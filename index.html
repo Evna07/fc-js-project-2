@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,21 @@
   </head>
   <body>
     <div class="wrapper">
-      <div class="main"></div>
+      <main class="container">
+        <h2 class="section-heading">Przelicznik walut</h2>
+        <form action="" onsubmit="return false" id="user-form">
+          <input
+            type="number"
+            placeholder="podaj kwotę"
+            required
+            class="amount-input"
+          />
+          <select name="select" id="select" class="currency-list"></select>
+          <button id="getCurrencies" type="submit" class="button-submit">
+            Przelicz
+          </button>
+        </form>
+      </main>
     </div>
     <script src="index.js"></script>
   </body>
