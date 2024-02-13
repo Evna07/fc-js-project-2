@@ -1,8 +1,8 @@
 const url = "https://api.nbp.pl/api/exchangerates/rates/a/";
-const container = document.querySelector(".container");
-const currecyList = document.querySelector(".currency-list");
+const container = document.querySelector("#appContainer");
+const currecyList = document.querySelector("#currenciesList");
 const buttonSubmit = document.querySelector("#getCurrencies");
-const amount = document.querySelector(".amount-input");
+const amount = document.querySelector("#userAmount");
 const totalResult = document.createElement("span");
 totalResult.classList.add("total-result");
 totalResult.textContent = "";
@@ -11,6 +11,11 @@ const errorLabel = document.createElement("label");
 errorLabel.classList.add("error-label");
 
 const currencies = ["EUR", "USD", "CHF"];
+
+const userForm = document.querySelector("#userForm");
+userForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+});
 
 currencies.forEach((currency) => {
   const optionCurrecy = document.createElement("option");
@@ -47,7 +52,7 @@ const hideLoading = () => {
 
 const getRate = () => {
   displayLoading();
-  fetch(`${url}${select.value}/`)
+  fetch(`${url}${currecyList.value}/`)
     .then((response) => response.json())
     .then((data) => {
       hideLoading();
@@ -72,7 +77,9 @@ const result = (rateValue) => {
     totalResult.textContent = `${Number(inputVal).toFixed(2)} ${
       currecyList.value
     } = ${result.toFixed(2)} PLN`;
-  } else totalResult.remove();
+  } else {
+    totalResult.remove();
+  }
 
   amount.value = "";
 };
@@ -95,7 +102,7 @@ const validateInput = () => {
   clearLabel();
 };
 
-buttonSubmit.addEventListener("click", () => {
+userForm.addEventListener("submit", () => {
   errorLabel.remove();
   validateInput();
 });
