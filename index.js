@@ -13,9 +13,6 @@ errorLabel.classList.add("error-label");
 const currencies = ["EUR", "USD", "CHF"];
 
 const userForm = document.querySelector("#userForm");
-userForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-});
 
 currencies.forEach((currency) => {
   const optionCurrecy = document.createElement("option");
@@ -103,6 +100,7 @@ const validateInput = () => {
 };
 
 userForm.addEventListener("submit", () => {
+  event.preventDefault();
   errorLabel.remove();
   validateInput();
 });
